@@ -1,0 +1,80 @@
+{% extends 'base.html' %}  {# '/blog/layout.html'로 하면 오류, .layout.html로 상대경로 지정방식 #}
+
+{% block content %}
+{#    <a href="/blog/">게시판 목록으로 돌아가기</a><br/><br/>#}
+{#    위는 하드코딩된 url 아래처럼 쓰려면, urls.py에서 name을 설정해야 함 #}
+<br/><br/><br/><br/>
+
+<form style=" margin: 0 auto; width: 85%;">
+<a href="{% url 'blog:post_list' %}"><button type="button" class="btn btn-outline-success">공지사항 목록</button></a> <br/><br/>
+    <fieldset>
+    <table class="table">
+        <thead>
+            <th>필드</th><th>내용</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>id:</td><td>{{ post.id }}</td>
+        </tr>
+        <tr>
+            <td>게시자:</td><td>{{ post.author }}</td>
+        </tr>
+        <tr>
+            <td>제목:</td><td>{{ post.title }}</td>
+        </tr>
+        <tr>
+            <td>간략 내용:</td><td>{{ post.short_content }}</td>
+        </tr>
+        <tr>
+            <td>내용:</td>
+            <td>{{ post.content }}</td>
+        </tr>
+        <tr>
+            <td>작성 일시:</td><td>{{ post.created_at }}</td>
+        </tr>
+        <tr>
+            <td>수정 일시:</td><td>{{ post.updated }}</td>
+        </tr>
+        <tr>
+            <td>태그 집합:</td><td>{{ post.tagged }}</td>
+        </tr>
+        </tbody>
+    </table> <br/>
+
+    {% for key, value in my_tag.items %}
+        {% if value > 0 %}
+        {% else %}
+            <input type="checkbox" name={{ key }}>
+        {% endif %}
+        <label for={{ key }}> {{ key }} </label>
+    {% endfor %} <br/>
+
+    <table class="table">
+        <thead>
+            <th>id</th>
+            <th>댓글</th>
+            <th class="d-lg-table-cell d-md-table-cell d-sm-none d-none">작성 일시</th>
+            <th>수정 일시</th>
+        </thead>
+        <tbody>
+        {% for c in post.comments.all %}
+            <tr style="background-color:
+                {% ifchanged c.id %}
+                    {% cycle 'white' '#eeeeee' %}
+                {% else %}
+                    'gray'
+                {% endifchanged %}"
+            >
+                <td>{{ c.id }}</td>
+                <td>{{ c.message }}</td>
+                <td class="d-lg-table-cell d-md-table-cell d-sm-none d-none">{{ c.created_at }}</td>
+                <td>{{ c.updated }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    </fieldset>
+</form> <br/>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="width: 85%; margin: 0 auto;">
+<br/><br/><br/><br/>
+    <h4>공지사항</h4>
+    <table class="table">
+        <thead>
+            <th>id</th>
+            <th class="d-lg-table-cell d-md-table-cell d-sm-none d-none">게시자</th>
+            <th>제목</th>
+            <th class="d-lg-table-cell d-md-table-cell d-sm-none d-none">간략 내용</th>
+            <th>작성 일시</th>
+            <th class="d-lg-table-cell d-md-table-cell d-sm-none d-none">수정 일시</th>
+            <th class="d-lg-table-cell d-md-table-cell d-sm-none d-none">태그 집합</th>
+        </thead>
+        <tbody>
+        {% for post in post_list %}
+        <tr style="background-color:
+                {% ifchanged post.id %}
+                    {% cycle 'white' '#eeeeee' %}
+                {% else %}
+                    'gray'
+                {% endifchanged %}"
+        >
+            <td>{{ post.id }}</td>
+            <td class="d-lg-table-cell d-md-table-cell d-sm-none d-none">{{ post.author }}</td>
+            <td>
+{#                <a href="/blog/{{ post.pk }}">#}
+{#                <a href="{% url 'blog:post_detail' pk=post.pk %}">#}
+                <a href="{{ post.get_absolute_url }}"> {# redirect 모델 구현한 방법 #}
+                    {# href="blog/..."로 하면 오류!!! #}
+                    {{ post.title }}
+                </a>
+            </td>
+            <td class="d-lg-table-cell d-md-table-cell d-sm-none d-none">{{ post.short_content }}</td>
+            <td>{{ post.created_at }}</td>
+            <td class="d-lg-table-cell d-md-table-cell d-sm-none d-none">{{ post.updated }}</td>
+            <td class="d-lg-table-cell d-md-table-cell d-sm-none d-none">{{ post.tagged }}</td>
+        </tr>
+       {% endfor %}
+        </tbody>
+    </table><br/>
+</div>
+
+{% endblock %}
